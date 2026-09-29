@@ -493,3 +493,76 @@ footer .wrap{
   .nav-meta{display:none}
   .result-card dl>div{font-size:.88rem}
 }
+
+.pdf-drop{
+  position:relative;
+  display:flex;
+  align-items:center;
+  gap:14px;
+  min-height:92px;
+  padding:16px;
+  border:1px dashed var(--line-strong);
+  border-radius:10px;
+  background:#08121b;
+  cursor:pointer;
+  transition:border-color .15s ease,background .15s ease;
+}
+.pdf-drop:hover{border-color:var(--cyan);background:#0b1722}
+.pdf-input{
+  position:absolute !important;
+  width:1px !important;
+  height:1px !important;
+  opacity:0;
+  pointer-events:none;
+}
+.pdf-icon{
+  flex:0 0 auto;
+  width:48px;
+  height:58px;
+  border:1px solid var(--line-strong);
+  border-radius:7px;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  font-family:var(--mono);
+  font-size:.7rem;
+  font-weight:800;
+  color:var(--cyan);
+  background:var(--panel2);
+}
+.pdf-drop b{display:block;color:var(--text);margin-bottom:4px}
+.pdf-drop small{display:block;color:var(--muted);line-height:1.35}
+.pdf-drop.is-ready{border-style:solid;border-color:rgba(127,240,168,.55);background:rgba(127,240,168,.04)}
+.pdf-drop.is-ready .pdf-icon{color:var(--ok);border-color:rgba(127,240,168,.45)}
+.pdf-drop.is-error{border-style:solid;border-color:rgba(255,143,143,.65);background:rgba(255,143,143,.04)}
+.pdf-drop.is-error .pdf-icon{color:var(--danger);border-color:rgba(255,143,143,.45)}
+.pdf-drop.is-loading{border-style:solid;border-color:rgba(125,223,255,.55)}
+.pdf-drop.is-loading .pdf-icon{animation:pdfpulse 1s ease-in-out infinite}
+@keyframes pdfpulse{50%{opacity:.45}}
+.extracted-wrap details{
+  border:1px solid var(--line);
+  border-radius:8px;
+  background:rgba(255,255,255,.018);
+}
+.extracted-wrap summary{
+  padding:10px 12px;
+  cursor:pointer;
+  color:var(--muted);
+  font-size:.8rem;
+}
+.extracted-text{
+  border:0;
+  border-top:1px solid var(--line);
+  border-radius:0 0 8px 8px;
+  min-height:120px;
+  font-family:var(--mono);
+  font-size:.7rem;
+  color:#8296a8;
+}
+.audit-error{
+  margin:0 0 8px;
+  max-width:420px;
+  color:var(--danger) !important;
+  font-size:.78rem !important;
+  text-align:right;
+}
