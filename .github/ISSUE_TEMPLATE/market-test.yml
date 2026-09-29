@@ -1,0 +1,70 @@
+name: Kostenlosen Pilot anfragen
+description: Anonymisierte Pilotanfrage für Angebotsvergleich, Restbestände oder Vergleichsportal-Gegencheck.
+title: "[Pilot] "
+labels: ["market-test"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Danke für dein Interesse am Transparency Lab.
+        
+        **Bitte veröffentliche hier keine personenbezogenen, vertraulichen oder kommerziell sensiblen Dokumente oder Daten.**
+        Für den ersten Schritt reicht eine anonymisierte Beschreibung. Wenn der Fall in den Pilot passt, klären wir den sicheren Datenaustausch separat.
+
+  - type: dropdown
+    id: pilot
+    attributes:
+      label: Welchen Pilot möchtest du testen?
+      options:
+        - Quote Benchmark – Angebote vergleichbar machen
+        - Surplus Value Check – Restbestände auf Wert prüfen
+        - Benchmark the Benchmark – Vergleichsportal gegenprüfen
+        - Anderer Transparenzfall
+    validations:
+      required: true
+
+  - type: textarea
+    id: problem
+    attributes:
+      label: Was ist die konkrete Entscheidung?
+      description: Beschreibe kurz, was du entscheiden möchtest und warum die vorhandenen Informationen nicht ausreichen.
+      placeholder: "Beispiel: Ich habe drei Angebote mit unterschiedlichen Leistungsumfängen und kann nicht erkennen, welches wirtschaftlich tatsächlich besser ist."
+    validations:
+      required: true
+
+  - type: textarea
+    id: input
+    attributes:
+      label: Welche Daten oder Quellen liegen vor?
+      description: Nur Kategorien oder anonymisierte Angaben nennen – keine sensiblen Dateien anhängen.
+      placeholder: "Beispiel: 3 PDF-Angebote, 2 Portal-Ergebnisse, Teileliste mit ca. 200 Positionen ..."
+    validations:
+      required: true
+
+  - type: textarea
+    id: outcome
+    attributes:
+      label: Was wäre ein nützliches Ergebnis?
+      placeholder: "Beispiel: Total Cost, fehlende Positionen, Marktpreis-Spanne, offene Fragen, Alternativen ..."
+    validations:
+      required: true
+
+  - type: dropdown
+    id: willingness
+    attributes:
+      label: Wenn der Pilot einen klaren wirtschaftlichen Mehrwert zeigt – würdest du für eine vertiefte Analyse oder Abwicklung zahlen?
+      options:
+        - Ja
+        - Vielleicht – abhängig vom Preis
+        - Nein
+        - Weiß ich noch nicht
+    validations:
+      required: true
+
+  - type: checkboxes
+    id: privacy
+    attributes:
+      label: Datenschutz
+      options:
+        - label: Ich habe verstanden, dass GitHub-Issues bei einem öffentlichen Repository öffentlich einsehbar sind und poste hier keine sensiblen Informationen.
+          required: true
