@@ -94,12 +94,10 @@ function analyseText(prefix) {
     }
 
     let bestIndex = -1;
-    let matchedKeyword = '';
     item.keywords.some(function(keyword) {
       const idx = lower.indexOf(keyword);
       if (idx >= 0) {
         bestIndex = idx;
-        matchedKeyword = keyword;
         return true;
       }
       return false;
@@ -111,14 +109,20 @@ function analyseText(prefix) {
       return;
     }
 
-    const start = Math.max(0, bestIndex - 100);
-    const end = Math.min(offer.text.length, bestIndex + matchedKeyword.length + 140);
-    const snippet = offer.text.slice(start, end).replace(/\s+/g, ' ').trim();
-    const windowLower = lower.slice(start, end);
-    const isNegative = NEGATIVE_MARKERS.some(function(marker) { return windowLower.includes(marker.toLowerCase()); });
+    const sentenceBreaks = /[.!?\n]/;
+    let start = bestIndex;
+    while (start > 0 && !sentenceBreaks.test(offer.text.charAt(start - 1))) start -= 1;
+    let end = bestIndex;
+    while (end < offer.text.length && !sentenceBreaks.test(offer.text.charAt(end))) end += 1;
+
+    const sentence = offer.text.slice(start, end).replace(/\s+/g, ' ').trim();
+    const sentenceLower = sentence.toLowerCase();
+    const isNegative = NEGATIVE_MARKERS.some(function(marker) {
+      return sentenceLower.includes(marker.toLowerCase());
+    });
 
     status.value = isNegative ? 'excluded' : 'included';
-    evidence.textContent = 'Beleg: “' + snippet + (end < offer.text.length ? '…' : '') + '”';
+    evidence.textContent = 'Beleg: “' + sentence + '”';
   });
 }
 
