@@ -550,21 +550,40 @@ function loadDemo() {
   field('a', 'kwp').value = '10.8';
   field('a', 'storage').value = '10';
   field('a', 'battery-price').value = '4500';
-  field('a', 'text').value =
-    'PV-Anlage 10,8 kWp mit 24 Solarmodulen à 450 Wp. Wechselrichter Fronius. 10 kWh Batteriespeicher inklusive Montage. ' +
-    'Montagesystem mit Dachhaken und Schienen, Gerüst und Absturzsicherung inklusive. Solarkabel, Stringkabel und Erdung enthalten. ' +
-    'AC-Anschluss bis Zählerschrank enthalten. Anpassung Zählerschrank inklusive. Anmeldung beim Netzbetreiber und Inbetriebnahme inklusive. ' +
-    'Ertragsprognose 10.300 kWh/a. Monitoring App inklusive. Dokumentation und Datenblätter bei Übergabe. 5 Jahre Montagegarantie.';
+  field('a', 'text').value = [
+    'Module spezifiziert', '24 Solarmodule à 450 Wp mit insgesamt 10,8 kWp sind enthalten.',
+    'Wechselrichter', 'Wechselrichter Fronius inklusive Lieferung und Parametrierung.',
+    'Batteriespeicher', 'Batteriespeicher mit 10 kWh inklusive Montage.',
+    'Montagesystem', 'Dachhaken und Schienen sind im Festpreis enthalten.',
+    'Gerüst / Absturzsicherung', 'Gerüst und Absturzsicherung inklusive.',
+    'DC-Verkabelung', 'Solarkabel, Stringkabel und Erdung enthalten.',
+    'AC-Elektroarbeiten', 'AC-Anschluss bis Zählerschrank enthalten.',
+    'Zählerschrank', 'Anpassung Zählerschrank inklusive.',
+    'Netzanschluss & Inbetriebnahme', 'Anmeldung beim Netzbetreiber und Inbetriebnahme inklusive.',
+    'Ertragsprognose', 'Ertragsprognose 10.300 kWh/a.',
+    'Monitoring / App', 'Monitoring App inklusive.',
+    'Dokumentation & Übergabe', 'Dokumentation und Datenblätter werden bei Übergabe übergeben.',
+    'Garantien / Gewährleistung', '5 Jahre Montagegarantie.'
+  ].join('\n');
 
   field('b', 'name').value = 'PV Direkt';
   field('b', 'total').value = '17400';
   field('b', 'kwp').value = '10.8';
   field('b', 'storage').value = '10';
   field('b', 'battery-price').value = '3900';
-  field('b', 'text').value =
-    '10,8 kWp Photovoltaikanlage, 24 Module 450 Wp, Wechselrichter und 10 kWh Stromspeicher. Unterkonstruktion und DC-Verkabelung inklusive. ' +
-    'Gerüst bauseits. AC-Elektroarbeiten inklusive. Zählerschrank bei Bedarf gegen Aufpreis. Netzbetreiber-Anmeldung und Inbetriebnahme inklusive. ' +
-    'Monitoring über App. Produktgarantien gemäß Herstellerbedingungen.';
+  field('b', 'text').value = [
+    'Module spezifiziert', '24 Module à 450 Wp mit 10,8 kWp sind enthalten.',
+    'Wechselrichter', 'Wechselrichter inklusive.',
+    'Batteriespeicher', '10 kWh Stromspeicher inklusive.',
+    'Montagesystem', 'Unterkonstruktion inklusive.',
+    'DC-Verkabelung', 'DC-Verkabelung inklusive.',
+    'Gerüst / Absturzsicherung', 'Gerüst bauseits.',
+    'AC-Elektroarbeiten', 'AC-Elektroarbeiten inklusive.',
+    'Zählerschrank', 'Zählerschrank bei Bedarf gegen Aufpreis.',
+    'Netzanschluss & Inbetriebnahme', 'Netzbetreiber-Anmeldung und Inbetriebnahme inklusive.',
+    'Monitoring / App', 'Monitoring über App inklusive.',
+    'Garantien / Gewährleistung', 'Produktgarantien gemäß Herstellerbedingungen.'
+  ].join('\n');
 
   analyseText('a');
   analyseText('b');
