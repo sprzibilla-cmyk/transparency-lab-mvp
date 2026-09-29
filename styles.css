@@ -566,3 +566,75 @@ footer .wrap{
   font-size:.78rem !important;
   text-align:right;
 }
+
+/* PDF-first MVP */
+.pdf-drop{
+  display:flex;
+  align-items:center;
+  gap:14px;
+  min-height:92px;
+  padding:16px;
+  border:1px dashed var(--line-strong);
+  border-radius:10px;
+  background:#08121b;
+  cursor:pointer;
+  transition:border-color .15s ease,background .15s ease;
+}
+.pdf-drop:hover{border-color:var(--cyan);background:#0b1722}
+.pdf-input{
+  position:absolute;
+  width:1px;
+  height:1px;
+  opacity:0;
+  pointer-events:none;
+}
+.pdf-icon{
+  display:grid;
+  place-items:center;
+  width:48px;
+  height:58px;
+  flex:0 0 auto;
+  border:1px solid var(--line-strong);
+  border-radius:7px;
+  color:var(--cyan);
+  background:var(--panel2);
+  font-family:var(--mono);
+  font-size:.72rem;
+  font-weight:900;
+}
+.pdf-drop b,.pdf-drop small{display:block}
+.pdf-drop b{color:var(--text);font-size:.95rem}
+.pdf-drop small{margin-top:4px;color:var(--muted);line-height:1.35}
+.pdf-drop.is-loading{border-color:var(--warn);background:rgba(255,214,107,.05)}
+.pdf-drop.is-ready{border-color:var(--ok);background:rgba(127,240,168,.05)}
+.pdf-drop.is-error{border-color:var(--danger);background:rgba(255,143,143,.05)}
+.pdf-drop.is-ready .pdf-icon{color:var(--ok);border-color:rgba(127,240,168,.45)}
+.pdf-drop.is-error .pdf-icon{color:var(--danger);border-color:rgba(255,143,143,.45)}
+.extracted-wrap details{
+  border:1px solid var(--line);
+  border-radius:8px;
+  background:rgba(255,255,255,.018);
+  overflow:hidden;
+}
+.extracted-wrap summary{
+  padding:10px 12px;
+  color:var(--muted);
+  cursor:pointer;
+  font-size:.8rem;
+}
+.extracted-text{
+  min-height:130px;
+  border:0;
+  border-top:1px solid var(--line);
+  border-radius:0;
+  color:#a8b7c4;
+  font-family:var(--mono);
+  font-size:.7rem;
+}
+.audit-error{
+  margin:0 0 9px!important;
+  max-width:360px!important;
+  color:var(--danger)!important;
+  font-weight:700;
+  text-align:right;
+}
