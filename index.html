@@ -3,120 +3,265 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width,initial-scale=1">
-  <title>Transparency Lab – unabhängig prüfen, bevor Geld fließt</title>
-  <meta name="description" content="Kostenloser Pilot: Angebote vergleichbar machen, Restbestände auf Wert prüfen und Vergleichsportale unabhängig gegenchecken.">
+  <title>Transparency Lab – PV Quote Audit</title>
+  <meta name="description" content="Zwei PV-Angebote auf eine vergleichbare Kostenbasis bringen: Scope-Lücken, Zusatzkosten, €/kWp und offene Punkte sichtbar machen.">
   <link rel="stylesheet" href="styles.css">
 </head>
 <body>
-  <header class="hero">
-    <div class="wrap">
-      <p class="eyebrow">Zero-cost market pilot · unabhängig · nachvollziehbar</p>
-      <h1>Bevor du kaufst, verkaufst oder einem Ranking vertraust: <span>prüf die Ökonomie dahinter.</span></h1>
-      <p class="lead">Wir testen einen unabhängigen Transparenz-Layer für Entscheidungen, bei denen Preise, Leistungen oder Marktwerte schwer vergleichbar sind. Keine bezahlte Platzierung. Kein Anbieter-Ranking nach Provision.</p>
-      <div class="hero-actions">
-        <a class="btn primary" href="#pilots">Pilot auswählen</a>
-        <a class="btn secondary" href="#methodik">So prüfen wir</a>
-      </div>
-      <p class="micro">Frühe Testphase. Ausgewählte Fälle kostenlos. AI-gestützt, menschlich gegengeprüft.</p>
+  <header class="site-header">
+    <div class="wrap nav">
+      <div class="brand"><span class="brand-mark"></span>Transparency Lab</div>
+      <div class="nav-meta">PV Quote Audit · MVP / v2</div>
     </div>
   </header>
 
   <main>
-    <section id="pilots" class="section">
-      <div class="wrap">
-        <div class="section-head">
-          <p class="eyebrow">Drei reale Needs. Eine gemeinsame Engine.</p>
-          <h2>Welches Problem willst du transparent machen?</h2>
+    <section class="hero">
+      <div class="wrap hero-grid">
+        <div>
+          <p class="eyebrow">Eine Anwendung · ein messbarer Job</p>
+          <h1>Zwei PV-Angebote. <span>Eine vergleichbare Kostenbasis.</span></h1>
+          <p class="lead">Nicht „welcher Anbieter gewinnt?“, sondern: Was ist wirklich enthalten, was fehlt, welche Zusatzkosten sind bekannt und wo ist der Vergleich noch unsicher?</p>
+          <div class="hero-actions">
+            <a class="btn primary" href="#audit">Audit starten</a>
+            <button class="btn ghost" id="load-demo" type="button">Demo mit Beispieldaten</button>
+          </div>
         </div>
-
-        <div class="cards">
-          <article class="card">
-            <span class="tag">Einkauf</span>
-            <h3>Angebote vergleichbar machen</h3>
-            <p>Du hast mehrere Lieferanten-, Handwerker- oder Dienstleistungsangebote, aber Leistungsumfang und Preislogik unterscheiden sich.</p>
-            <ul>
-              <li>Leistungen normalisieren</li>
-              <li>Lücken und Ausschlüsse markieren</li>
-              <li>Kostentreiber sichtbar machen</li>
-              <li>Rückfragen für den Anbieter formulieren</li>
-            </ul>
-            <a class="btn card-btn" href="https://github.com/sprzibilla-cmyk/chatgpt-project-test/issues/new?template=market-test.yml&title=%5BPilot%5D%20Quote%20Benchmark">Kostenlosen Pilot anfragen</a>
-          </article>
-
-          <article class="card">
-            <span class="tag">Handel</span>
-            <h3>Restbestände auf Wert prüfen</h3>
-            <p>Du hast Material, Ersatzteile oder Überbestände und weißt nicht, ob Verkauf, Bündelung oder Abschreibung wirtschaftlich sinnvoller ist.</p>
-            <ul>
-              <li>Positionen priorisieren</li>
-              <li>Markt- und Liquiditätssignale prüfen</li>
-              <li>mögliche Verkaufskanäle strukturieren</li>
-              <li>Rechercheaufwand auf werthaltige Positionen fokussieren</li>
-            </ul>
-            <a class="btn card-btn" href="https://github.com/sprzibilla-cmyk/chatgpt-project-test/issues/new?template=market-test.yml&title=%5BPilot%5D%20Surplus%20Value%20Check">Kostenlosen Pilot anfragen</a>
-          </article>
-
-          <article class="card">
-            <span class="tag">Transparenz</span>
-            <h3>Benchmark the benchmark</h3>
-            <p>Ein Vergleichsportal zeigt dir „das beste Angebot“. Wir prüfen unabhängig, welche Annahmen, Abdeckung und Gesamtkosten hinter dem Ergebnis stehen.</p>
-            <ul>
-              <li>Ergebnisse mehrerer Quellen gegenüberstellen</li>
-              <li>fehlende Anbieter oder Kostenpositionen markieren</li>
-              <li>Interessenkonflikte transparent machen</li>
-              <li>Abweichungen nachvollziehbar erklären</li>
-            </ul>
-            <a class="btn card-btn" href="https://github.com/sprzibilla-cmyk/chatgpt-project-test/issues/new?template=market-test.yml&title=%5BPilot%5D%20Benchmark%20the%20Benchmark">Kostenlosen Pilot anfragen</a>
-          </article>
-        </div>
-
-        <div class="privacy-callout">
-          <strong>Wichtig:</strong> Der Pilot-Request läuft zunächst über GitHub. Bitte dort keine personenbezogenen, vertraulichen oder kommerziell sensiblen Dokumente veröffentlichen. Für den ersten Schritt reichen Problem, Kategorie und eine anonymisierte Beschreibung.
-        </div>
+        <aside class="hero-proof">
+          <span class="kicker">Was der Audit anders macht</span>
+          <strong>Extract → Normalize → Challenge → Evidence</strong>
+          <p>Keine erfundene Präzision. Fehlende Kosten bleiben offen, bis du einen belastbaren Wert einträgst. Jede erkannte Position bekommt einen Beleg aus dem eingefügten Angebotstext.</p>
+        </aside>
       </div>
     </section>
 
-    <section id="methodik" class="section alt">
-      <div class="wrap narrow">
-        <p class="eyebrow">Methodik</p>
-        <h2>Transparenz ist kein Slogan. Sie muss überprüfbar sein.</h2>
-        <div class="steps">
-          <div><b>01</b><span>Input strukturieren</span><p>Wir trennen Fakten, Annahmen, Preise, Leistungsumfang und Datenlücken.</p></div>
-          <div><b>02</b><span>Vergleich normalisieren</span><p>Unterschiedliche Angebote oder Quellen werden auf gemeinsame Kriterien gebracht.</p></div>
-          <div><b>03</b><span>Gegencheck</span><p>Wir suchen externe Markt-, Preis- oder Verfügbarkeitsindikatoren, soweit sinnvoll und zugänglich.</p></div>
-          <div><b>04</b><span>Unsicherheit zeigen</span><p>Wo Daten fehlen, wird nicht geraten. Unsicherheit wird explizit markiert.</p></div>
-          <div><b>05</b><span>Ökonomie erklären</span><p>Das Ergebnis zeigt nicht nur „was“, sondern warum eine Option wirtschaftlich anders aussieht.</p></div>
+    <section class="section" id="audit">
+      <div class="wrap">
+        <div class="section-head">
+          <div>
+            <p class="eyebrow">Interaktiver MVP</p>
+            <h2>PV Quote Audit</h2>
+          </div>
+          <p>Füge die Eckdaten und den Text zweier Angebote ein. Der Browser erkennt typische Leistungsbausteine, markiert Unklarheiten und berechnet eine nachvollziehbare Kostenbasis.</p>
+        </div>
+
+        <form id="audit-form" class="audit-shell">
+          <div class="audit-toolbar">
+            <div class="status"><span class="status-dot"></span>läuft vollständig im Browser · keine Übertragung</div>
+            <div class="toolbar-actions">
+              <button class="btn small ghost" id="reset-audit" type="button">Zurücksetzen</button>
+              <button class="btn small" id="load-demo-inline" type="button" onclick="document.getElementById('load-demo').click()">Demo laden</button>
+            </div>
+          </div>
+
+          <div class="offer-grid">
+            <article class="offer">
+              <div class="offer-label">
+                <h3>Angebot A</h3>
+                <span>Input / A</span>
+              </div>
+              <div class="field-grid">
+                <div class="field full">
+                  <label for="a-name">Anbieter / Bezeichnung</label>
+                  <input id="a-name" value="Angebot A">
+                </div>
+                <div class="field">
+                  <label for="a-total">Gesamtpreis brutto €</label>
+                  <input id="a-total" inputmode="decimal" type="number" min="0" step="50" placeholder="18500">
+                </div>
+                <div class="field">
+                  <label for="a-kwp">PV-Leistung kWp</label>
+                  <input id="a-kwp" inputmode="decimal" type="number" min="0" step="0.1" placeholder="10.8">
+                </div>
+                <div class="field">
+                  <label for="a-storage">Speicher kWh</label>
+                  <input id="a-storage" inputmode="decimal" type="number" min="0" step="0.1" placeholder="10">
+                </div>
+                <div class="field">
+                  <label for="a-battery-price">Speicherpreis-Anteil €</label>
+                  <input id="a-battery-price" inputmode="decimal" type="number" min="0" step="50" placeholder="optional">
+                </div>
+                <div class="field full">
+                  <label for="a-text">Angebotstext</label>
+                  <textarea id="a-text" placeholder="Text aus PDF, E-Mail oder Angebot hier einfügen …"></textarea>
+                  <p class="field-note">Der MVP sucht lokal nach typischen PV-Leistungsbausteinen. Er ersetzt keine technische Prüfung des Angebots.</p>
+                </div>
+              </div>
+            </article>
+
+            <article class="offer">
+              <div class="offer-label">
+                <h3>Angebot B</h3>
+                <span>Input / B</span>
+              </div>
+              <div class="field-grid">
+                <div class="field full">
+                  <label for="b-name">Anbieter / Bezeichnung</label>
+                  <input id="b-name" value="Angebot B">
+                </div>
+                <div class="field">
+                  <label for="b-total">Gesamtpreis brutto €</label>
+                  <input id="b-total" inputmode="decimal" type="number" min="0" step="50" placeholder="17400">
+                </div>
+                <div class="field">
+                  <label for="b-kwp">PV-Leistung kWp</label>
+                  <input id="b-kwp" inputmode="decimal" type="number" min="0" step="0.1" placeholder="10.8">
+                </div>
+                <div class="field">
+                  <label for="b-storage">Speicher kWh</label>
+                  <input id="b-storage" inputmode="decimal" type="number" min="0" step="0.1" placeholder="10">
+                </div>
+                <div class="field">
+                  <label for="b-battery-price">Speicherpreis-Anteil €</label>
+                  <input id="b-battery-price" inputmode="decimal" type="number" min="0" step="50" placeholder="optional">
+                </div>
+                <div class="field full">
+                  <label for="b-text">Angebotstext</label>
+                  <textarea id="b-text" placeholder="Text aus PDF, E-Mail oder Angebot hier einfügen …"></textarea>
+                  <p class="field-note">Begriffe wie „bauseits“, „nicht enthalten“, „optional“ oder „gegen Aufpreis“ werden als Ausschluss-Signal gewertet.</p>
+                </div>
+              </div>
+            </article>
+          </div>
+
+          <div class="scope-title">
+            <p class="eyebrow">Reference framework</p>
+            <h3>Leistungsumfang normalisieren</h3>
+            <p>Der automatische Status ist nur ein Vorschlag aus dem eingefügten Text. Du kannst jeden Punkt überschreiben und bei fehlenden Leistungen eine bekannte Zusatzkosten- oder Risikoreserve eintragen.</p>
+          </div>
+
+          <div class="matrix-wrap">
+            <table class="audit-table">
+              <thead>
+                <tr>
+                  <th>Prüfpunkt</th>
+                  <th>Angebot A</th>
+                  <th>Angebot B</th>
+                </tr>
+              </thead>
+              <tbody id="scope-body"></tbody>
+            </table>
+          </div>
+
+          <div class="audit-submit">
+            <p><strong>Audit-Logik:</strong> bekannte Ausschlüsse werden zur normalisierten Untergrenze addiert. Reserven für unklare Positionen bilden eine Risiko-Obergrenze. Positionen ohne €-Wert bleiben sichtbar offen.</p>
+            <button class="btn primary" type="submit">Audit berechnen</button>
+          </div>
+        </form>
+      </div>
+    </section>
+
+    <section class="section alt result-section" id="results" hidden>
+      <div class="wrap">
+        <div class="section-head">
+          <div>
+            <p class="eyebrow">Audit output</p>
+            <h2>Was der Headline-Preis nicht zeigt</h2>
+          </div>
+          <p>Der Report trennt Preis, Scope und Unsicherheit. Er gibt bewusst keinen Black-Box-„Sieger“ aus.</p>
+        </div>
+
+        <div class="result-banner" id="comparison-summary"></div>
+        <div class="result-grid" id="result-cards"></div>
+
+        <section class="audit-panel">
+          <div class="panel-head">
+            <div>
+              <p class="eyebrow">Evidence ledger</p>
+              <h3>Abweichungen & Fundstellen</h3>
+            </div>
+          </div>
+          <div class="matrix-wrap">
+            <table class="ledger">
+              <tbody id="ledger-body"></tbody>
+            </table>
+          </div>
+        </section>
+
+        <section class="audit-panel">
+          <div class="panel-head">
+            <div>
+              <p class="eyebrow">Challenge</p>
+              <h3>Rückfragen vor Auftrag</h3>
+            </div>
+            <button class="btn small" type="button" id="copy-questions">Rückfragen kopieren</button>
+          </div>
+          <ol class="question-list" id="question-list"></ol>
+        </section>
+
+        <div class="result-actions">
+          <button class="btn" id="download-report" type="button">Audit als Text herunterladen</button>
+          <a class="btn primary" href="https://github.com/sprzibilla-cmyk/transparency-lab-mvp/issues/new?template=market-test.yml&title=%5BPilot%5D%20PV%20Quote%20Audit">Fall vertiefen</a>
+        </div>
+        <p class="footnote" id="result-footnote"></p>
+      </div>
+    </section>
+
+    <section class="section" id="framework">
+      <div class="wrap">
+        <div class="section-head">
+          <div>
+            <p class="eyebrow">Warum nicht einfach ChatGPT?</p>
+            <h2>Der Edge ist das Verfahren, nicht das Sprachmodell.</h2>
+          </div>
+          <p>Der Audit zwingt jedes Angebot durch denselben Referenzrahmen und trennt belegte Fakten von Annahmen und offenen Kosten.</p>
+        </div>
+        <div class="framework-grid">
+          <article class="framework-card">
+            <b>01 / EXTRACT</b>
+            <h3>Fundstellen statt Bauchgefühl</h3>
+            <p>Typische PV-Leistungsbausteine werden im Angebotstext gesucht und als Beleg angezeigt.</p>
+          </article>
+          <article class="framework-card">
+            <b>02 / NORMALIZE</b>
+            <h3>Preis auf gleiche Basis</h3>
+            <p>Bekannte Zusatzkosten werden separat sichtbar und zur Kostenbasis addiert.</p>
+          </article>
+          <article class="framework-card">
+            <b>03 / CHALLENGE</b>
+            <h3>Offene Punkte erzwingen</h3>
+            <p>Unklare oder ausgeschlossene Leistungen erzeugen konkrete Rückfragen an den Anbieter.</p>
+          </article>
+          <article class="framework-card">
+            <b>04 / EVIDENCE</b>
+            <h3>Unsicherheit bleibt sichtbar</h3>
+            <p>Fehlt ein belastbarer €-Wert, erfindet der Audit keinen. Die Lücke bleibt als Lücke stehen.</p>
+          </article>
+        </div>
+        <p class="source-note">Der Referenzrahmen orientiert sich u. a. an Verbraucherhinweisen des <a href="https://www.solarwirtschaft.de/fuer-verbraucher/technikberatung/" target="_blank" rel="noopener">Bundesverbands Solarwirtschaft</a>, der bei PV-Angeboten neben dem Preis unter anderem Anlagen-/Speicherleistung, Module, Wechselrichter, Speicher, Montagesystem und Ertragsabschätzung nennt.</p>
+      </div>
+    </section>
+
+    <section class="section alt">
+      <div class="wrap">
+        <div class="privacy">
+          <p><strong>Privacy by construction.</strong> Die Daten aus den beiden Textfeldern werden in dieser Version ausschließlich lokal im Browser verarbeitet. Es gibt kein Konto, kein Backend und keine Speicherung durch Transparency Lab.</p>
+          <span class="mono">0 € infra / static MVP</span>
         </div>
       </div>
     </section>
 
     <section class="section">
-      <div class="wrap narrow">
-        <p class="eyebrow">Was wir bewusst nicht tun</p>
-        <h2>Keine Black Box.</h2>
-        <div class="principles">
-          <p><strong>Keine bezahlte Platzierung im Ranking.</strong> Monetarisierung und Ergebnislogik sollen getrennt bleiben.</p>
-          <p><strong>Keine erfundene Präzision.</strong> Illiquide Märkte, unvollständige Daten oder technische Unsicherheit werden kenntlich gemacht.</p>
-          <p><strong>Keine technische Freigabe.</strong> Insbesondere Ersatzteil-Substitutionen werden im MVP nur als Recherchehinweis, nicht als Freigabe dargestellt.</p>
-          <p><strong>Keine regulierte Beratung.</strong> Der Pilot ersetzt keine Rechts-, Steuer-, Anlage-, medizinische oder erlaubnispflichtige Versicherungsberatung.</p>
+      <div class="wrap">
+        <div class="cta-box">
+          <div>
+            <p class="eyebrow">Pilot</p>
+            <h2>Der nächste Test ist nicht „gefällt die Seite?“</h2>
+            <p>Wir wollen wissen, ob der Audit bei realen PV-Angeboten einen finanziell relevanten Unterschied findet, den ein reiner Preisvergleich übersieht.</p>
+          </div>
+          <a class="btn primary" href="https://github.com/sprzibilla-cmyk/transparency-lab-mvp/issues/new?template=market-test.yml&title=%5BPilot%5D%20PV%20Quote%20Audit">Realen Fall einreichen</a>
         </div>
-      </div>
-    </section>
-
-    <section class="section final-cta">
-      <div class="wrap narrow">
-        <h2>Hast du einen Fall, bei dem du dem Vergleich nicht ganz traust?</h2>
-        <p>Dann ist genau das der Test. Kein Verkaufsgespräch. Beschreibe den Fall anonymisiert und wir prüfen, ob er in den kostenlosen Pilot passt.</p>
-        <a class="btn primary" href="https://github.com/sprzibilla-cmyk/chatgpt-project-test/issues/new?template=market-test.yml">Pilot anfragen</a>
       </div>
     </section>
   </main>
 
   <footer>
     <div class="wrap">
-      <span>Transparency Lab · Experimental MVP</span>
-      <span>Built to test demand before building software.</span>
+      <span>Transparency Lab · PV Quote Audit · Experimental MVP</span>
+      <span>Keine technische, steuerliche oder rechtliche Beratung.</span>
     </div>
   </footer>
+
+  <script src="app.js"></script>
 </body>
 </html>
