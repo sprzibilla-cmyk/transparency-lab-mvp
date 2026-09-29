@@ -42,12 +42,12 @@
             <p class="eyebrow">Interaktiver MVP</p>
             <h2>PV Quote Audit</h2>
           </div>
-          <p>Füge die Eckdaten und den Text zweier Angebote ein. Der Browser erkennt typische Leistungsbausteine, markiert Unklarheiten und berechnet eine nachvollziehbare Kostenbasis.</p>
+          <p>Lade zwei PV-Angebote als PDF hoch. Der Browser extrahiert den Text lokal, erkennt typische Leistungsbausteine, markiert Unklarheiten und berechnet eine nachvollziehbare Kostenbasis.</p>
         </div>
 
         <form id="audit-form" class="audit-shell">
           <div class="audit-toolbar">
-            <div class="status"><span class="status-dot"></span>läuft vollständig im Browser · keine Übertragung</div>
+            <div class="status"><span class="status-dot"></span>PDF-Auswertung lokal im Browser · keine Angebotsdatei wird hochgeladen</div>
             <div class="toolbar-actions">
               <button class="btn small ghost" id="reset-audit" type="button">Zurücksetzen</button>
               <button class="btn small" id="load-demo-inline" type="button" onclick="document.getElementById('load-demo').click()">Demo laden</button>
@@ -61,6 +61,14 @@
                 <span>Input / A</span>
               </div>
               <div class="field-grid">
+                <div class="field full">
+                  <label for="a-pdf">Angebot A als PDF <strong>· Pflicht</strong></label>
+                  <label class="pdf-drop" for="a-pdf">
+                    <input id="a-pdf" class="pdf-input" type="file" accept="application/pdf,.pdf" required>
+                    <span class="pdf-icon">PDF</span>
+                    <span><b>PDF auswählen</b><small id="a-pdf-status">Noch keine Datei geladen</small></span>
+                  </label>
+                </div>
                 <div class="field full">
                   <label for="a-name">Anbieter / Bezeichnung</label>
                   <input id="a-name" value="Angebot A">
@@ -81,10 +89,12 @@
                   <label for="a-battery-price">Speicherpreis-Anteil €</label>
                   <input id="a-battery-price" inputmode="decimal" type="number" min="0" step="50" placeholder="optional">
                 </div>
-                <div class="field full">
-                  <label for="a-text">Angebotstext</label>
-                  <textarea id="a-text" placeholder="Text aus PDF, E-Mail oder Angebot hier einfügen …"></textarea>
-                  <p class="field-note">Der MVP sucht lokal nach typischen PV-Leistungsbausteinen. Er ersetzt keine technische Prüfung des Angebots.</p>
+                <div class="field full extracted-wrap">
+                  <details>
+                    <summary>Extrahierten PDF-Text anzeigen</summary>
+                    <textarea id="a-text" class="extracted-text" readonly placeholder="Wird nach dem PDF-Upload automatisch gefüllt."></textarea>
+                  </details>
+                  <p class="field-note">Der PDF-Text wird lokal im Browser gelesen. Bei gescannten PDFs ohne Textschicht stoppt der Audit mit Hinweis statt zu raten.</p>
                 </div>
               </div>
             </article>
@@ -95,6 +105,14 @@
                 <span>Input / B</span>
               </div>
               <div class="field-grid">
+                <div class="field full">
+                  <label for="b-pdf">Angebot B als PDF <strong>· Pflicht</strong></label>
+                  <label class="pdf-drop" for="b-pdf">
+                    <input id="b-pdf" class="pdf-input" type="file" accept="application/pdf,.pdf" required>
+                    <span class="pdf-icon">PDF</span>
+                    <span><b>PDF auswählen</b><small id="b-pdf-status">Noch keine Datei geladen</small></span>
+                  </label>
+                </div>
                 <div class="field full">
                   <label for="b-name">Anbieter / Bezeichnung</label>
                   <input id="b-name" value="Angebot B">
@@ -115,9 +133,11 @@
                   <label for="b-battery-price">Speicherpreis-Anteil €</label>
                   <input id="b-battery-price" inputmode="decimal" type="number" min="0" step="50" placeholder="optional">
                 </div>
-                <div class="field full">
-                  <label for="b-text">Angebotstext</label>
-                  <textarea id="b-text" placeholder="Text aus PDF, E-Mail oder Angebot hier einfügen …"></textarea>
+                <div class="field full extracted-wrap">
+                  <details>
+                    <summary>Extrahierten PDF-Text anzeigen</summary>
+                    <textarea id="b-text" class="extracted-text" readonly placeholder="Wird nach dem PDF-Upload automatisch gefüllt."></textarea>
+                  </details>
                   <p class="field-note">Begriffe wie „bauseits“, „nicht enthalten“, „optional“ oder „gegen Aufpreis“ werden als Ausschluss-Signal gewertet.</p>
                 </div>
               </div>
@@ -145,7 +165,10 @@
 
           <div class="audit-submit">
             <p><strong>Audit-Logik:</strong> bekannte Ausschlüsse werden zur normalisierten Untergrenze addiert. Reserven für unklare Positionen bilden eine Risiko-Obergrenze. Positionen ohne €-Wert bleiben sichtbar offen.</p>
-            <button class="btn primary" type="submit">Audit berechnen</button>
+            <div>
+              <p id="audit-error" class="audit-error" hidden></p>
+              <button class="btn primary" type="submit">PDFs prüfen & Audit berechnen</button>
+            </div>
           </div>
         </form>
       </div>
@@ -235,7 +258,7 @@
     <section class="section alt">
       <div class="wrap">
         <div class="privacy">
-          <p><strong>Privacy by construction.</strong> Die Daten aus den beiden Textfeldern werden in dieser Version ausschließlich lokal im Browser verarbeitet. Es gibt kein Konto, kein Backend und keine Speicherung durch Transparency Lab.</p>
+          <p><strong>Privacy by construction.</strong> Die ausgewählten PDFs und der daraus extrahierte Text werden in dieser Version ausschließlich lokal im Browser verarbeitet. Es gibt kein Konto, kein Backend und keine Speicherung durch Transparency Lab.</p>
           <span class="mono">0 € infra / static MVP</span>
         </div>
       </div>
@@ -262,6 +285,7 @@
     </div>
   </footer>
 
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js"></script>
   <script src="app.js"></script>
 </body>
 </html>
