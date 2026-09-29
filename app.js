@@ -14,7 +14,25 @@ const AUDIT_ITEMS = [
   { id: 'warranty', label: 'Garantien / Gewährleistung', hint: 'Produkt-, Leistungs- und Montagebedingungen', keywords: ['garantie', 'gewährleistung', 'gewaehrleistung', 'leistungsgarantie'] }
 ];
 
-const NEGATIVE_MARKERS = ['nicht enthalten', 'nicht inklusive', 'bauseits', 'zzgl.', 'zzgl ', 'optional', 'gegen aufpreis', 'separat', 'nicht Bestandteil', 'nicht bestandteil'];
+const HEADING_ALIASES = {
+  modules: ['Module spezifiziert','PV-Module','Solarmodule','Modulfeld','Module','PV Module','PV Generator','Generatorfeld','PV-Generator'],
+  inverter: ['Wechselrichter','Inverter','WR','Leistungselektronik'],
+  mounting: ['Montagesystem','Unterkonstruktion','Dachmontage','Unterkonstruktion / Montage','Dachbefestigung','Befestigungssystem'],
+  scaffold: ['Gerüst / Absturzsicherung','Gerüst','Absturzsicherung','Baustellensicherung','Arbeitsschutz'],
+  dc: ['DC-Verkabelung','DC-Seite','Gleichstromverkabelung','DC Installation'],
+  ac: ['AC-Elektroarbeiten','AC-Seite','Elektroinstallation','Wechselstromanschluss','AC Installation'],
+  meter: ['Zählerschrank','Zähleranlage','Zählerplatz','Zähleranlage / Zählerschrank','Messkonzept','Messkonzept / Zähler','Zählertechnik'],
+  storage: ['Batteriespeicher','Speichersystem','Batterie','Energiespeicher','Akkusystem'],
+  grid: ['Netzanschluss & Inbetriebnahme','Netzanmeldung / Inbetriebnahme','Netzservice','Netzanschluss','Inbetriebnahme','Netzformalitäten','Netzservice / Inbetriebsetzung'],
+  yield: ['Ertragsprognose','Erwarteter Jahresertrag','Simulation / Ertrag','Ertragssimulation'],
+  monitoring: ['Monitoring / App','Monitoring','Anlagenüberwachung','Portal / Fernüberwachung','Fernüberwachung'],
+  docs: ['Dokumentation & Übergabe','Übergabeunterlagen','Dokumentation','Unterlagen','Anlagendokumente','Projektunterlagen'],
+  warranty: ['Garantien / Gewährleistung','Garantiebedingungen','Gewährleistung','Garantie','Service / Garantie']
+};
+const NEGATIVE_MARKERS = ['nicht enthalten','nicht inklusive','bauseits','zzgl.','zzgl ','optional','gegen aufpreis','gegen mehrpreis','separat','nicht bestandteil','kundenseitig','nicht im preis','nicht im lieferumfang','nicht berücksichtigt','separat abgerechnet','nicht im grundpreis','separat bereitzustellen','separat angeboten'];
+const UNCLEAR_MARKERS = ['nach aufwand','nach technischer prüfung','bei bedarf','wird geprüft','wird bewertet','projektbezogen','wird abgestimmt','nach örtlicher','örtlichen gegebenheiten','je nach technischer verfügbarkeit','geltenden vorgaben','abhängig von','jeweiligen garantiebedingungen','final geklärt','wird im projektverlauf','vorbehaltlich','nach ortsbesichtigung','nach aufmaß','abhängig vom bestand','preis noch offen','umfang offen','wird nach finaler','wird projektbezogen festgelegt','wird mit der auftragsbestätigung konkretisiert','im beratungstermin festgelegt','noch abgestimmt','preis auf anfrage','noch zu klären','noch offen','vorbehalt','nach klärung','gegebenenfalls','ggf.','nach rücksprache','nach besichtigung','gesondert geklärt','abhängig'];
+const POSITIVE_MARKERS = ['enthalten','inklusive','im festpreis','im angebotspreis','bestandteil','vollständig','eingerechnet','einkalkuliert','berücksichtigt','lieferumfang','wird eingerichtet','werden übergeben','erhalten sie','gelten 5 jahre','komplett enthalten','im pauschalpreis','im preis enthalten'];
+const NA_STORAGE_MARKERS = ['kein batteriespeicher','ohne speicher','ohne batteriespeicher','speicher nicht vorgesehen','kein speicher vorgesehen'];
 const form = document.getElementById('audit-form');
 const matrixBody = document.getElementById('scope-body');
 const results = document.getElementById('results');
@@ -123,8 +141,8 @@ function inferOfferFields(prefix, text, fileName) {
   }
 
   const storagePatterns = [
-    /(?:batteriespeicher|stromspeicher|speicher|batterie)[^.\n]{0,70}?(\d{1,3}(?:[.,]\d{1,2})?)\s*kWh\b/i,
-    /(\d{1,3}(?:[.,]\d{1,2})?)\s*kWh\b[^.\n]{0,50}?(?:batteriespeicher|stromspeicher|speicher|batterie)/i
+    /(?:batteriespeicher|stromspeicher|speicher|batterie|energiespeicher|akkusystem)[\s\S]{0,90}?(\d{1,3}(?:[.,]\d{1,2})?)\s*kWh\b/i,
+    /(\d{1,3}(?:[.,]\d{1,2})?)\s*kWh\b[\s\S]{0,60}?(?:batteriespeicher|stromspeicher|speicher|batterie|energiespeicher|akkusystem)/i
   ];
   for (const pattern of storagePatterns) {
     const match = text.match(pattern);
@@ -136,8 +154,8 @@ function inferOfferFields(prefix, text, fileName) {
   }
 
   const pricePatterns = [
-    /(?:gesamtpreis|gesamtsumme|bruttosumme|endbetrag|gesamt\s*brutto|summe\s*brutto)[^\d€]{0,35}([\d.\s]+(?:,\d{1,2})?)\s*€/i,
-    /(?:gesamtpreis|gesamtsumme|bruttosumme|endbetrag|gesamt\s*brutto|summe\s*brutto)[^€]{0,35}€\s*([\d.\s]+(?:,\d{1,2})?)/i
+    /(?:gesamtpreis|gesamtsumme|bruttosumme|endbetrag|gesamt\s*brutto|summe\s*brutto)[^\d€]{0,35}([\d.\s]+(?:,\d{1,2})?)\s*(?:€|EUR)/i,
+    /(?:gesamtpreis|gesamtsumme|bruttosumme|endbetrag|gesamt\s*brutto|summe\s*brutto)[^€]{0,35}(?:€|EUR)\s*([\d.\s]+(?:,\d{1,2})?)/i
   ];
   for (const pattern of pricePatterns) {
     const match = text.match(pattern);
@@ -223,50 +241,135 @@ document.getElementById('b-pdf').addEventListener('change', function(event) {
   if (file) handlePdf('b', file);
 });
 
+function normalizedText(value) {
+  return String(value || '').toLowerCase().replace(/\s+/g, ' ').trim();
+}
+
+function markerIn(text, markers) {
+  return markers.some(function(marker) { return text.includes(marker); });
+}
+
+function buildSectionEvidence(text) {
+  const lines = text.split(/\n/).map(function(line) { return line.trim(); }).filter(Boolean);
+  const headingMap = {};
+  Object.keys(HEADING_ALIASES).forEach(function(id) {
+    HEADING_ALIASES[id].forEach(function(alias) { headingMap[normalizedText(alias)] = id; });
+  });
+  const candidates = {};
+  AUDIT_ITEMS.forEach(function(item) { candidates[item.id] = []; });
+
+  lines.forEach(function(line, index) {
+    const id = headingMap[normalizedText(line)];
+    if (!id) return;
+    const buffer = [line];
+    for (let j = index + 1; j < Math.min(lines.length, index + 6); j += 1) {
+      const next = normalizedText(lines[j]);
+      if (headingMap[next]) break;
+      if (/^(gesamtsumme|gesamtpreis|summe brutto|endbetrag brutto)/i.test(next)) break;
+      buffer.push(lines[j]);
+    }
+    const evidence = buffer.join(' ');
+    const lower = normalizedText(evidence);
+    let score = markerIn(lower, NEGATIVE_MARKERS) ? 10 :
+      markerIn(lower, UNCLEAR_MARKERS) ? 8 :
+      markerIn(lower, POSITIVE_MARKERS) ? 6 : 2;
+    if (buffer.length > 1) score += 1;
+    candidates[id].push({ score: score, index: index, evidence: evidence });
+  });
+
+  const result = {};
+  Object.keys(candidates).forEach(function(id) {
+    if (!candidates[id].length) return;
+    candidates[id].sort(function(a, b) { return b.score - a.score || b.index - a.index; });
+    result[id] = candidates[id][0].evidence;
+  });
+  return result;
+}
+
+function fallbackEvidence(text, item) {
+  const lower = text.toLowerCase();
+  const aliases = (HEADING_ALIASES[item.id] || []).map(function(x) { return x.toLowerCase(); });
+  const terms = item.keywords.concat(aliases);
+  const candidates = [];
+
+  terms.forEach(function(term) {
+    let from = 0;
+    while (from < lower.length) {
+      const idx = lower.indexOf(term, from);
+      if (idx < 0) break;
+      const left = Math.max(lower.lastIndexOf('\n', idx), lower.lastIndexOf('.', idx), lower.lastIndexOf('!', idx), lower.lastIndexOf('?', idx)) + 1;
+      const ends = [lower.indexOf('\n', idx), lower.indexOf('.', idx), lower.indexOf('!', idx), lower.indexOf('?', idx)].filter(function(x) { return x >= 0; });
+      const right = ends.length ? Math.min.apply(null, ends) + 1 : Math.min(text.length, idx + 250);
+      const evidence = text.slice(left, right).replace(/\s+/g, ' ').trim();
+      const evLower = normalizedText(evidence);
+      const score = markerIn(evLower, NEGATIVE_MARKERS) ? 5 :
+        markerIn(evLower, UNCLEAR_MARKERS) ? 4 :
+        markerIn(evLower, POSITIVE_MARKERS) ? 3 : 1;
+      candidates.push({ score: score, evidence: evidence });
+      from = idx + Math.max(1, term.length);
+    }
+  });
+  candidates.sort(function(a, b) { return b.score - a.score || b.evidence.length - a.evidence.length; });
+  return candidates.length ? candidates[0].evidence : '';
+}
+
+function extractAddOnCost(evidence) {
+  const patterns = [
+    /(?:zusatzkosten|mehrkosten|aufpreis|mehrpreis|kalkulationshinweis)[^€\d]{0,50}([\d.\s]+(?:,\d{1,2})?)\s*€/i,
+    /(?:zusatzkosten|mehrkosten|aufpreis|mehrpreis|kalkulationshinweis)[^€]{0,50}€\s*([\d.\s]+(?:,\d{1,2})?)/i
+  ];
+  for (const pattern of patterns) {
+    const match = evidence.match(pattern);
+    if (!match) continue;
+    const value = parseLocaleNumber(match[1]);
+    if (Number.isFinite(value) && value > 0 && value < 100000) return value;
+  }
+  return 0;
+}
+
 function analyseText(prefix) {
   const offer = getOffer(prefix);
-  const lower = offer.text.toLowerCase();
+  const sections = buildSectionEvidence(offer.text);
 
   AUDIT_ITEMS.forEach(function(item) {
     const status = document.getElementById(prefix + '-' + item.id + '-status');
-    const evidence = document.getElementById(prefix + '-' + item.id + '-evidence');
+    const evidenceEl = document.getElementById(prefix + '-' + item.id + '-evidence');
+    const costEl = document.getElementById(prefix + '-' + item.id + '-cost');
+    const evidence = sections[item.id] || fallbackEvidence(offer.text, item);
+    const evLower = normalizedText(evidence);
 
-    if (item.id === 'storage' && offer.storage <= 0 && !item.keywords.some(function(k) { return lower.includes(k); })) {
-      status.value = 'na';
-      evidence.textContent = 'Kein Speicher angegeben';
-      return;
+    let value = 'unclear';
+    if (item.id === 'storage' && markerIn(evLower, NA_STORAGE_MARKERS)) {
+      value = 'na';
+    } else if (!evidence) {
+      value = 'unclear';
+    } else if (markerIn(evLower, NEGATIVE_MARKERS)) {
+      value = 'excluded';
+    } else if (markerIn(evLower, UNCLEAR_MARKERS)) {
+      value = 'unclear';
+    } else if (item.id === 'storage' && offer.storage <= 0 && !/\d+(?:[.,]\d+)?\s*kwh/i.test(evLower)) {
+      value = 'na';
+    } else if (markerIn(evLower, POSITIVE_MARKERS)) {
+      value = 'included';
+    } else if (item.id === 'yield' && /\d[\d.\s]*(?:[.,]\d+)?\s*kwh/i.test(evLower)) {
+      value = 'included';
+    } else if (item.id === 'modules' && (/\d+(?:[.,]\d+)?\s*kwp/i.test(evLower) || evLower.includes('modul'))) {
+      value = 'included';
+    } else if (item.id === 'warranty' && /\d+\s*(?:jahre|jahr)/i.test(evLower)) {
+      value = 'included';
+    } else {
+      value = 'unclear';
     }
 
-    let bestIndex = -1;
-    item.keywords.some(function(keyword) {
-      const idx = lower.indexOf(keyword);
-      if (idx >= 0) {
-        bestIndex = idx;
-        return true;
-      }
-      return false;
-    });
+    status.value = value;
+    evidenceEl.textContent = evidence ? 'Beleg: “' + evidence.replace(/\s+/g, ' ').trim() + '”' : 'Kein belastbarer Beleg erkannt';
 
-    if (bestIndex < 0) {
-      status.value = 'unclear';
-      evidence.textContent = 'Im eingefügten Text nicht gefunden';
-      return;
+    if (value === 'excluded' || value === 'unclear') {
+      const addOn = extractAddOnCost(evidence);
+      if (addOn > 0) costEl.value = addOn;
+    } else {
+      costEl.value = '';
     }
-
-    const sentenceBreaks = /[.!?\n]/;
-    let start = bestIndex;
-    while (start > 0 && !sentenceBreaks.test(offer.text.charAt(start - 1))) start -= 1;
-    let end = bestIndex;
-    while (end < offer.text.length && !sentenceBreaks.test(offer.text.charAt(end))) end += 1;
-
-    const sentence = offer.text.slice(start, end).replace(/\s+/g, ' ').trim();
-    const sentenceLower = sentence.toLowerCase();
-    const isNegative = NEGATIVE_MARKERS.some(function(marker) {
-      return sentenceLower.includes(marker.toLowerCase());
-    });
-
-    status.value = isNegative ? 'excluded' : 'included';
-    evidence.textContent = 'Beleg: “' + sentence + '”';
   });
 }
 
