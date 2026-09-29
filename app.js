@@ -562,7 +562,7 @@ function loadDemo() {
     'Netzanschluss & Inbetriebnahme', 'Anmeldung beim Netzbetreiber und Inbetriebnahme inklusive.',
     'Ertragsprognose', 'Ertragsprognose 10.300 kWh/a.',
     'Monitoring / App', 'Monitoring App inklusive.',
-    'Dokumentation & Übergabe', 'Dokumentation und Datenblätter werden bei Übergabe übergeben.',
+    'Dokumentation & Übergabe', 'Dokumentation und Datenblätter werden übergeben.',
     'Garantien / Gewährleistung', '5 Jahre Montagegarantie.'
   ].join('\n');
 
@@ -582,7 +582,7 @@ function loadDemo() {
     'Zählerschrank', 'Zählerschrank bei Bedarf gegen Aufpreis.',
     'Netzanschluss & Inbetriebnahme', 'Netzbetreiber-Anmeldung und Inbetriebnahme inklusive.',
     'Monitoring / App', 'Monitoring über App inklusive.',
-    'Garantien / Gewährleistung', 'Produktgarantien gemäß Herstellerbedingungen.'
+    'Garantien / Gewährleistung', 'Produktgarantien sind enthalten; Details gemäß Herstellerbedingungen.'
   ].join('\n');
 
   analyseText('a');
