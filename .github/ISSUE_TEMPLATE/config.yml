@@ -1,0 +1,5 @@
+blank_issues_enabled: false
+contact_links:
+  - name: Datenschutz-Hinweis
+    url: https://github.com/sprzibilla-cmyk/chatgpt-project-test#guardrails
+    about: Keine vertraulichen oder personenbezogenen Daten in öffentlichen Issues veröffentlichen.
