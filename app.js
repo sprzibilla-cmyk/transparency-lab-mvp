@@ -22,6 +22,12 @@ const demoButton = document.getElementById('load-demo');
 const resetButton = document.getElementById('reset-audit');
 const downloadButton = document.getElementById('download-report');
 const copyQuestionsButton = document.getElementById('copy-questions');
+const pdfState = { a: false, b: false };
+let demoMode = false;
+
+if (window.pdfjsLib) {
+  window.pdfjsLib.GlobalWorkerOptions.workerSrc = 'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.worker.min.js';
+}
 
 function money(value) {
   if (!Number.isFinite(value)) return '—';
@@ -78,6 +84,144 @@ function getOffer(prefix) {
     text: field(prefix, 'text').value || ''
   };
 }
+
+
+function setPdfStatus(prefix, message, state) {
+  const el = document.getElementById(prefix + '-pdf-status');
+  const drop = document.querySelector('label[for="' + prefix + '-pdf"]');
+  if (el) el.textContent = message;
+  if (drop) {
+    drop.classList.remove('is-ready', 'is-error', 'is-loading');
+    if (state) drop.classList.add('is-' + state);
+  }
+}
+
+function parseLocaleNumber(raw) {
+  if (!raw) return NaN;
+  let value = String(raw).replace(/\s/g, '').replace(/[^\d,.-]/g, '');
+  if (value.includes(',') && value.includes('.')) {
+    value = value.lastIndexOf(',') > value.lastIndexOf('.')
+      ? value.replace(/\./g, '').replace(',', '.')
+      : value.replace(/,/g, '');
+  } else if (value.includes(',')) {
+    value = value.replace(',', '.');
+  }
+  return parseFloat(value);
+}
+
+function inferOfferFields(prefix, text, fileName) {
+  const cleanName = String(fileName || '')
+    .replace(/\.pdf$/i, '')
+    .replace(/[_-]+/g, ' ')
+    .trim();
+  if (cleanName) field(prefix, 'name').value = cleanName;
+
+  const kwpMatch = text.match(/(\d{1,3}(?:[.,]\d{1,2})?)\s*kWp\b/i);
+  if (kwpMatch && !field(prefix, 'kwp').value) {
+    const kwp = parseLocaleNumber(kwpMatch[1]);
+    if (Number.isFinite(kwp) && kwp > 0 && kwp < 500) field(prefix, 'kwp').value = kwp;
+  }
+
+  const storagePatterns = [
+    /(?:batteriespeicher|stromspeicher|speicher|batterie)[^.\n]{0,70}?(\d{1,3}(?:[.,]\d{1,2})?)\s*kWh\b/i,
+    /(\d{1,3}(?:[.,]\d{1,2})?)\s*kWh\b[^.\n]{0,50}?(?:batteriespeicher|stromspeicher|speicher|batterie)/i
+  ];
+  for (const pattern of storagePatterns) {
+    const match = text.match(pattern);
+    if (match && !field(prefix, 'storage').value) {
+      const kwh = parseLocaleNumber(match[1]);
+      if (Number.isFinite(kwh) && kwh > 0 && kwh < 500) field(prefix, 'storage').value = kwh;
+      break;
+    }
+  }
+
+  const pricePatterns = [
+    /(?:gesamtpreis|gesamtsumme|bruttosumme|endbetrag|gesamt\s*brutto|summe\s*brutto)[^\d€]{0,35}([\d.\s]+(?:,\d{1,2})?)\s*€/i,
+    /(?:gesamtpreis|gesamtsumme|bruttosumme|endbetrag|gesamt\s*brutto|summe\s*brutto)[^€]{0,35}€\s*([\d.\s]+(?:,\d{1,2})?)/i
+  ];
+  for (const pattern of pricePatterns) {
+    const match = text.match(pattern);
+    if (match && !field(prefix, 'total').value) {
+      const total = parseLocaleNumber(match[1]);
+      if (Number.isFinite(total) && total > 1000 && total < 500000) field(prefix, 'total').value = Math.round(total * 100) / 100;
+      break;
+    }
+  }
+}
+
+async function extractPdfText(file) {
+  if (!window.pdfjsLib) throw new Error('PDF-Engine konnte nicht geladen werden.');
+  if (!file || file.type !== 'application/pdf' && !/\.pdf$/i.test(file.name)) {
+    throw new Error('Bitte eine PDF-Datei auswählen.');
+  }
+  if (file.size > 20 * 1024 * 1024) {
+    throw new Error('PDF ist größer als 20 MB.');
+  }
+
+  const bytes = await file.arrayBuffer();
+  const task = window.pdfjsLib.getDocument({ data: bytes });
+  const pdf = await task.promise;
+  const pages = [];
+
+  for (let pageNo = 1; pageNo <= pdf.numPages; pageNo += 1) {
+    const page = await pdf.getPage(pageNo);
+    const content = await page.getTextContent();
+    const lines = [];
+    let lastY = null;
+    let line = [];
+
+    content.items.forEach(function(item) {
+      const y = item.transform ? Math.round(item.transform[5]) : null;
+      if (lastY !== null && y !== null && Math.abs(y - lastY) > 3 && line.length) {
+        lines.push(line.join(' '));
+        line = [];
+      }
+      if (item.str) line.push(item.str);
+      lastY = y;
+    });
+    if (line.length) lines.push(line.join(' '));
+    pages.push(lines.join('\n'));
+  }
+
+  const text = pages.join('\n\n').replace(/[ \t]+/g, ' ').replace(/\n{3,}/g, '\n\n').trim();
+  if (text.length < 80) {
+    throw new Error('Keine ausreichende Textschicht erkannt. Das PDF ist vermutlich gescannt; OCR ist in diesem MVP noch nicht aktiv.');
+  }
+  return { text: text, pages: pdf.numPages };
+}
+
+async function handlePdf(prefix, file) {
+  pdfState[prefix] = false;
+  demoMode = false;
+  results.hidden = true;
+  field(prefix, 'text').value = '';
+  setPdfStatus(prefix, 'PDF wird lokal gelesen …', 'loading');
+  const errorEl = document.getElementById('audit-error');
+  errorEl.hidden = true;
+
+  try {
+    const parsed = await extractPdfText(file);
+    field(prefix, 'text').value = parsed.text;
+    inferOfferFields(prefix, parsed.text, file.name);
+    analyseText(prefix);
+    pdfState[prefix] = true;
+    setPdfStatus(prefix, file.name + ' · ' + parsed.pages + ' Seite(n) · Text erkannt', 'ready');
+  } catch (error) {
+    setPdfStatus(prefix, error.message || 'PDF konnte nicht gelesen werden.', 'error');
+    errorEl.textContent = (prefix === 'a' ? 'Angebot A: ' : 'Angebot B: ') + (error.message || 'PDF konnte nicht gelesen werden.');
+    errorEl.hidden = false;
+  }
+}
+
+document.getElementById('a-pdf').addEventListener('change', function(event) {
+  const file = event.target.files && event.target.files[0];
+  if (file) handlePdf('a', file);
+});
+
+document.getElementById('b-pdf').addEventListener('change', function(event) {
+  const file = event.target.files && event.target.files[0];
+  if (file) handlePdf('b', file);
+});
 
 function analyseText(prefix) {
   const offer = getOffer(prefix);
@@ -280,14 +424,24 @@ function renderResults() {
 
 function clearAudit() {
   form.reset();
+  demoMode = false;
+  pdfState.a = false;
+  pdfState.b = false;
   field('a', 'name').value = 'Angebot A';
   field('b', 'name').value = 'Angebot B';
+  setPdfStatus('a', 'Noch keine Datei geladen');
+  setPdfStatus('b', 'Noch keine Datei geladen');
+  const errorEl = document.getElementById('audit-error');
+  errorEl.hidden = true;
   buildMatrix();
   results.hidden = true;
 }
 
 function loadDemo() {
   clearAudit();
+  demoMode = true;
+  setPdfStatus('a', 'Demo-Datensatz statt PDF', 'ready');
+  setPdfStatus('b', 'Demo-Datensatz statt PDF', 'ready');
   field('a', 'name').value = 'Solarwerk';
   field('a', 'total').value = '18500';
   field('a', 'kwp').value = '10.8';
@@ -347,6 +501,21 @@ function reportText() {
 
 form.addEventListener('submit', function(event) {
   event.preventDefault();
+  const errorEl = document.getElementById('audit-error');
+  errorEl.hidden = true;
+
+  if (!demoMode && (!pdfState.a || !pdfState.b)) {
+    errorEl.textContent = 'Für einen echten Audit müssen Angebot A und Angebot B jeweils als lesbare PDF geladen sein.';
+    errorEl.hidden = false;
+    return;
+  }
+
+  if (!field('a', 'total').value || !field('b', 'total').value || !field('a', 'kwp').value || !field('b', 'kwp').value) {
+    errorEl.textContent = 'Bitte Gesamtpreis und kWp beider Angebote prüfen bzw. ergänzen. Diese Werte konnten nicht in jedem PDF eindeutig erkannt werden.';
+    errorEl.hidden = false;
+    return;
+  }
+
   analyseText('a');
   analyseText('b');
   renderResults();
